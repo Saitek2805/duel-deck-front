@@ -1,0 +1,42 @@
+<div class="weather-container">
+    <!-- Input para buscar una nueva ciudad -->
+    <div class="search-container">
+      <input
+        [(ngModel)]="cityInput"
+        placeholder="Ingresa una ciudad"
+        (keyup.enter)="searchWeather()"
+      />
+      <button (click)="searchWeather()">Buscar</button>
+    </div>
+  
+    <!-- Mensaje de carga -->
+    <div *ngIf="!weatherInformation && !errorMessage">
+      <p>Cargando datos del clima...</p>
+    </div>
+  
+    <!-- Mensaje de error -->
+    <div *ngIf="errorMessage">
+      <p class="error-message">{{ errorMessage }}</p>
+    </div>
+  
+    <!-- Datos del clima -->
+    <div *ngIf="weatherInformation" class="weather-box">
+      <div class="weather-details">
+        <div class="weather-detail">
+          <img
+            [src]="'http://openweathermap.org/img/wn/' + weatherInformation.weather[0].icon + '.png'"
+            alt="Weather Icon"
+            class="weather-icon"
+          />
+          <ul class="weather-list">
+            <li><strong>City:</strong> {{ weatherInformation.name }}</li>
+            <li><strong>Country:</strong> {{ weatherInformation.sys.country }}</li>
+            <li><strong>Temperature:</strong> {{ weatherInformation.main.temp }}°C</li>
+            <li><strong>Feels Like:</strong> {{ weatherInformation.main.feels_like }}°C</li>
+            <li><strong>Humidity:</strong> {{ weatherInformation.main.humidity }}%</li>
+            <li><strong>Wind Speed:</strong> {{ weatherInformation.wind.speed }} m/s</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>

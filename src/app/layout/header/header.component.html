@@ -1,0 +1,25 @@
+<header class="flex justify-between items-center bg-gray-800 text-white px-5 py-3 sticky top-0 z-[1000] shadow-md">
+  <div class="text-xl font-bold">
+    <a href="/" class="text-white no-underline">Keiner Hurtado</a>
+  </div>
+
+  <!-- Botón para menú móvil -->
+  <button class="menu-toggle block md:hidden text-white text-2xl focus:outline-none" >
+    ☰
+  </button>
+
+  <!-- Menú de navegación -->
+  <nav class="navigation">
+    <ul
+      
+      class="nav-links gap-4 md:flex items-center text-sm"
+    >
+      <li><a routerLink="/" class="hover:text-cyan-400 transition-colors">Inicio</a></li>
+      <li *ngIf="!isLoggedIn"><a routerLink="/cards" class="hover:text-cyan-400 transition-colors">Cartas (prueba sin login)</a></li>
+      <li *ngIf="isLoggedIn"><a routerLink="/cards" class="hover:text-cyan-400 transition-colors">Cartas</a></li>
+      <li><a routerLink="/weather" class="hover:text-cyan-400 transition-colors">El tiempo</a></li>
+      <li *ngIf="!isLoggedIn"><a routerLink="/login" class="hover:text-cyan-400 transition-colors">Login</a></li>
+      <li *ngIf="isLoggedIn"><a (click)="logout()" class="hover:text-cyan-400 transition-colors cursor-pointer">Logout</a></li>
+    </ul>
+  </nav>
+</header>
