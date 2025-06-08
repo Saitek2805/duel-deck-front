@@ -1,28 +1,51 @@
-<div class="login-container">
-    <h2>Login</h2>
-    <form (ngSubmit)="onSubmit()" class="login-form">
-      <div class="form-group">
+<div class="min-h-screen flex items-center justify-center ">
+  <div class="relative w-full max-w-sm bg-gray-800  shadow-2xl pt-16 pb-8 px-8 text-white space-y-6">
+
+    <!-- Logo sobresaliente -->
+    <div class="absolute -top-12 left-1/2 transform -translate-x-1/2">
+      <div class="w-24 h-24  rounded-full flex items-center justify-center shadow-lg ">
+        <!-- Sustituye por tu logo -->
+        <img src="dueldeck.png" alt="Logo DuelDeck" class="w-24 h-24 object-contain rounded-full" />
+      </div>
+    </div>
+
+    <h2 class="text-2xl font-bold text-center">Iniciar sesión</h2>
+
+    <form (ngSubmit)="onSubmit()" class="space-y-4">
+      <div>
+        <label for="username" class="block text-sm font-medium text-gray-300">Usuario</label>
         <input
-          type="text"
-          placeholder="Usuario"
-          [(ngModel)]="username"
+          id="username"
           name="username"
-          aria-label="Usuario"
+          type="text"
+          [(ngModel)]="username"
           required
+          placeholder="Tu usuario"
+          class="mt-1 w-full px-4 py-2 border border-gray-600 bg-gray-700 text-white rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-cyan-400"
         />
       </div>
-      <div class="form-group">
+
+      <div>
+        <label for="password" class="block text-sm font-medium text-gray-300">Contraseña</label>
         <input
-          type="password"
-          placeholder="Contraseña"
-          [(ngModel)]="password"
-          aria-label="Contraseña"
+          id="password"
           name="password"
+          type="password"
+          [(ngModel)]="password"
           required
+          placeholder="Tu contraseña"
+          class="mt-1 w-full px-4 py-2 border border-gray-600 bg-gray-700 text-white rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-cyan-400"
         />
       </div>
-      <button type="submit" class="login-button">Login</button>
+
+      <button
+        type="submit"
+        class="w-full bg-cyan-400 text-gray-900 font-semibold py-2 px-4 rounded-md hover:bg-cyan-300 transition"
+      >
+        Entrar
+      </button>
     </form>
-    <p *ngIf="error" class="error-message">{{ error }}</p>
-   </div>
-   
+
+    <p *ngIf="error" class="text-sm text-red-400 text-center">{{ error }}</p>
+  </div>
+</div>

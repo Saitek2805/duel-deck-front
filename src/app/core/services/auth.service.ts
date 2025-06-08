@@ -40,6 +40,24 @@ export class AuthService {
   );
 }
 
+getUser(): { username: string; fullName?: string; roles?: string[] } | null {
+  const token = this.getToken();
+  if (!token) return null;
+
+  try {
+    const decodedToken: any = jwtDecode(token);
+    return {
+      username: decodedToken.sub || '',
+      fullName: decodedToken.fullName || '', // ajusta según cómo venga del backend
+      roles: decodedToken.roles || [],
+    };
+  } catch (error) {
+    console.error('Error al decodificar el token:', error);
+    return null;
+  }
+}
+
+
 
  /**
   * Almacena el token de autenticación en el BehaviorSubject.

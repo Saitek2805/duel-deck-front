@@ -19,7 +19,7 @@ import { MatSortModule } from '@angular/material/sort';
 })
 
 export class CardsComponent implements OnInit {
-    displayedColumns: string[] = ['id','name'];
+    displayedColumns: string[] = ['id','name','expansion','type'];
 
     dataSource = new MatTableDataSource<any>([]);
 

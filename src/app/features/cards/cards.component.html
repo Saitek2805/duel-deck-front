@@ -1,40 +1,71 @@
-<div class="regions-container">
-  <h2>Cartas</h2>
+<div class="w-[90%] max-w-4xl mx-auto mt-8 text-center font-sans">
+  <h2 class="mb-6 text-2xl font-bold text-gray-800">Cartas</h2>
 
-  <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
-  
-      <ng-container matColumnDef="id">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header> ID </th>
-          <td mat-cell *matCellDef="let card"> {{ card.id }} </td>
-      </ng-container>
-  
-      <ng-container matColumnDef="name">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header> Nombre </th>
-          <td mat-cell *matCellDef="let card"> {{ card.name }} </td>
-      </ng-container>
-  
-      <!-- Definición de la fila de encabezado -->
-      <thead>
-          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-      </thead>
-  
-      <!-- Definición de las filas de datos -->
-      <tbody>
-          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-      </tbody>
-  
+  <table mat-table [dataSource]="dataSource" matSort class="w-full mt-6 rounded-lg overflow-hidden shadow-lg bg-gray-50">
+    
+    <!-- ID -->
+    <ng-container matColumnDef="id">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header class="bg-blue-600 text-white px-4 py-3 text-left font-bold">
+        ID
+      </th>
+      <td mat-cell *matCellDef="let card" class="px-4 py-3 text-left text-gray-700">
+        {{ card.id }}
+      </td>
+    </ng-container>
+
+    <!-- Nombre -->
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header class="bg-blue-600 text-white px-4 py-3 text-left font-bold">
+        Nombre
+      </th>
+      <td mat-cell *matCellDef="let card" class="px-4 py-3 text-left text-gray-700">
+        {{ card.name }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="expansion">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header class="bg-blue-600 text-white px-4 py-3 text-left font-bold">
+        Expansión
+      </th>
+      <td mat-cell *matCellDef="let card" class="px-4 py-3 text-left text-gray-700">
+        {{ card.expansion.name }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="type">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header class="bg-blue-600 text-white px-4 py-3 text-left font-bold">
+        Tipo
+      </th>
+      <td mat-cell *matCellDef="let card" class="px-4 py-3 text-left text-gray-700">
+        {{ card.type }}
+      </td>
+    </ng-container>
+
+    <!-- Encabezado -->
+    <thead>
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    </thead>
+
+    <!-- Filas -->
+    <tbody>
+      <tr
+        mat-row
+        *matRowDef="let row; columns: displayedColumns;"
+        class="hover:bg-gray-200 transition-colors"
+      ></tr>
+    </tbody>
   </table>
-  
-  <!-- Paginador de Angular Material -->
+
+  <!-- Paginador -->
   <mat-paginator
-      [length]="totalElements"
-      [pageSize]="pageSize"
-      [pageSizeOptions]="[5, 10, 20]"
-      (page)="handlePageEvent($event)"
-      showFirstLastButtons>
-  </mat-paginator>
-  
-  <!-- Mensaje de error en caso de que ocurra un problema al cargar los datos -->
-  <p *ngIf="error" class="error-message">{{ error }}</p>
-   </div>
-   
+    class="mt-6"
+    [length]="totalElements"
+    [pageSize]="pageSize"
+    [pageSizeOptions]="[5, 10, 20]"
+    (page)="handlePageEvent($event)"
+    showFirstLastButtons
+  ></mat-paginator>
+
+  <!-- Error -->
+  <p *ngIf="error" class="mt-6 text-red-600 text-base">{{ error }}</p>
+</div>

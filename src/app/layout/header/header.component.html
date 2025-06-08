@@ -1,25 +1,70 @@
-<header class="flex justify-between items-center bg-gray-800 text-white px-5 py-3 sticky top-0 z-[1000] shadow-md">
-  <div class="text-xl font-bold">
-    <a href="/" class="text-white no-underline">Keiner Hurtado</a>
+<header class="bg-gray-800 text-white px-5 py-3 sticky top-0 z-[1000] shadow-md">
+  <!-- Topbar -->
+  <div class="flex justify-between items-center text-xs border-b border-gray-700 pb-1 mb-2">
+    <div class="flex gap-4">
+      <p class="hover:text-cyan-400 cursor-pointer transition-colors">Contacto</p>
+      <p class="hover:text-cyan-400 cursor-pointer transition-colors">Mapa web</p>
+    </div>
   </div>
 
-  <!-- Botón para menú móvil -->
-  <button class="menu-toggle block md:hidden text-white text-2xl focus:outline-none" >
-    ☰
-  </button>
+  <!-- Main Header Content -->
+  <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+    <!-- Logo + Title -->
+    <div class="flex items-center gap-3 cursor-pointer" [routerLink]="['/']">
+      <img src="dueldeck.png" alt="Logo DuelDeck" class="h-10 w-auto" />
+      <div class="leading-tight">
+        <p class="text-sm text-gray-300">Gestión de colecciones y mazos</p>
+      </div>
+    </div>
 
-  <!-- Menú de navegación -->
-  <nav class="navigation">
-    <ul
-      
-      class="nav-links gap-4 md:flex items-center text-sm"
-    >
-      <li><a routerLink="/" class="hover:text-cyan-400 transition-colors">Inicio</a></li>
-      <li *ngIf="!isLoggedIn"><a routerLink="/cards" class="hover:text-cyan-400 transition-colors">Cartas (prueba sin login)</a></li>
-      <li *ngIf="isLoggedIn"><a routerLink="/cards" class="hover:text-cyan-400 transition-colors">Cartas</a></li>
-      <li><a routerLink="/weather" class="hover:text-cyan-400 transition-colors">El tiempo</a></li>
-      <li *ngIf="!isLoggedIn"><a routerLink="/login" class="hover:text-cyan-400 transition-colors">Login</a></li>
-      <li *ngIf="isLoggedIn"><a (click)="logout()" class="hover:text-cyan-400 transition-colors cursor-pointer">Logout</a></li>
-    </ul>
-  </nav>
+    <!-- Search & Navigation -->
+    <div class="flex flex-col md:flex-row items-center gap-4 w-full md:w-auto">
+      <!-- Search bar -->
+      <div class="relative w-full md:w-64">
+        <input type="text" placeholder="Buscar cartas..." class="w-full rounded-lg px-3 py-1.5 text-sm text-black focus:outline-none" />
+        <mat-icon class="absolute right-2 top-1/2 -translate-y-1/2 text-gray-500">search</mat-icon>
+      </div>
+
+      <!-- Buttons -->
+      <div class="flex gap-4 text-sm">
+        <button class="flex items-center gap-1 hover:text-cyan-400 transition-colors" [routerLink]="['/cards']">
+          <mat-icon>content_copy</mat-icon>
+          <span>Cartas</span>
+        </button>
+        <button class="flex items-center gap-1 hover:text-cyan-400 transition-colors">
+          <mat-icon>style</mat-icon>
+          <span>Mazos</span>
+        </button>
+        <button class="flex items-center gap-1 hover:text-cyan-400 transition-colors">
+          <mat-icon>layers</mat-icon>
+          <span>Expansiones</span>
+        </button>
+      </div>
+
+      <!-- Usuario logueado -->
+      <div *ngIf="isLoggedIn; else loginButton" class="relative" (click)="toggleMenu()">
+        <div class="flex flex-col items-end cursor-pointer hover:text-cyan-400 transition-colors">
+          <div class="flex items-center gap-1">
+            <mat-icon>person</mat-icon>
+            <span class="font-medium text-sm">{{ userName }}</span>
+          </div>
+          <span class="text-xs text-gray-400">Usuario autenticado</span>
+        </div>
+
+        <!-- Dropdown -->
+        <div *ngIf="menuVisible" class="absolute right-0 mt-2 w-48 bg-white text-black rounded shadow-md z-50">
+          <div class="px-4 py-2 hover:bg-gray-100 cursor-pointer" (click)="onDatosUsuario()">Perfil</div>
+          <div class="px-4 py-2 hover:bg-gray-100 cursor-pointer" (click)="logout()">Cerrar sesión</div>
+        </div>
+      </div>
+
+      <!-- Botón login si no está logueado -->
+      <ng-template #loginButton>
+        <button class="flex items-center gap-1 hover:text-cyan-400 transition-colors" [routerLink]="['/login']">
+          <mat-icon>login</mat-icon>
+          <span>Login</span>
+        </button>
+      </ng-template>
+    </div>
+  </div>
 </header>

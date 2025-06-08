@@ -1,39 +1,54 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { AuthService } from '../../core/services/auth.service';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { Subscription } from 'rxjs';
+import { MatIconModule } from '@angular/material/icon';
+import { MatDividerModule } from '@angular/material/divider';
 
 @Component({
-    selector: 'app-header',
-    imports: [RouterLink, CommonModule, ],
-    templateUrl: './header.component.html',
-    styleUrls: ['./header.component.scss'],
+  selector: 'app-header',
+  standalone: true, // si usas componentes standalone
+  imports: [RouterLink, CommonModule, MatIconModule, MatDividerModule],
+  templateUrl: './header.component.html',
+  styleUrls: ['./header.component.scss'],
 })
-
 export class HeaderComponent implements OnInit, OnDestroy {
-    isLoggedIn = false; // Estado local de autenticación.
-    private subscription: Subscription | null = null;
+  isLoggedIn = false;
+    userName = '';
+  menuVisible = false;
+  private subscription: Subscription | null = null;
 
-    constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService, private router: Router) {}
 
-    ngOnInit() {
-        // Suscripción al estado de autenticación.
-        this.subscription = this.authService.isLoggedIn().subscribe((loggedIn) => {
-            this.isLoggedIn = loggedIn;
-        });
+  ngOnInit() {
+  this.subscription = this.authService.isLoggedIn().subscribe((loggedIn) => {
+    this.isLoggedIn = loggedIn;
+    if (loggedIn) {
+      this.userName = this.authService.getUser()?.fullName || this.authService.getUser()?.username || 'Usuario';
+    } else {
+      this.userName = '';
     }
+  });
+}
 
-    logout() {
-        this.authService.logout(); // Llamar al método de logout del servicio.
-    }
 
-    ngOnDestroy() {
-        // Cancelar la suscripción al destruir el componente.
-        if (this.subscription) {
-            this.subscription.unsubscribe();
-        }
-    }
+  toggleMenu() {
+    this.menuVisible = !this.menuVisible;
+  }
 
-    
+  onDatosUsuario() {
+    this.router.navigate(['/perfil']); // Ajusta según tu ruta real
+    this.menuVisible = false;
+  }
+
+  logout() {
+    this.authService.logout();
+    this.router.navigate(['/login']); // Redirección tras cerrar sesión
+    this.menuVisible = false;
+  }
+
+  ngOnDestroy() {
+    this.subscription?.unsubscribe();
+  }
 }
