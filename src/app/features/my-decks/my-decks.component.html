@@ -1,0 +1,58 @@
+<div
+  *ngIf="loading"
+  class="flex justify-center items-center h-64"
+  style="background-image: url('/109134537_p0_master1200.jpg'); background-size: cover; background-position: center;"
+>
+  <mat-spinner color="accent"></mat-spinner>
+</div>
+
+<div
+  *ngIf="!loading"
+  class="min-h-screen w-full flex flex-col items-center justify-start py-8"
+  style="background-image: url('/109134537_p0_master1200.jpg'); background-size: cover; background-position: center;"
+>
+  <div *ngIf="myDecks.length === 0" class="text-center py-8 text-cyan-300 text-xl font-semibold bg-gray-900 bg-opacity-80 backdrop-blur-md rounded-2xl shadow-lg px-8 mt-16">
+    No tienes mazos todavía. ¡Crea el primero!
+  </div>
+
+  <div *ngIf="myDecks.length > 0" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-4 w-full max-w-7xl mx-auto">
+    <mat-card
+      *ngFor="let deck of myDecks"
+      class="rounded-2xl shadow-xl hover:shadow-2xl transition-shadow duration-300 flex flex-col cursor-pointer bg-gray-800 bg-opacity-80 backdrop-blur-md border border-cyan-700 group"
+      [routerLink]="['/decks', deck.id]"
+    >
+      <img *ngIf="deck.image"
+        [src]="getDeckImageUrl(deck.image)"
+        alt="Imagen del mazo"
+        class="rounded-t-2xl h-40 w-full object-cover mb-2 border-b border-cyan-800 group-hover:brightness-110 transition"
+      >
+      <mat-card-header>
+        <mat-card-title class="text-xl font-bold text-cyan-400 group-hover:text-cyan-300 transition">
+          {{ deck.name }}
+        </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <p class="text-gray-200">{{ deck.description }}</p>
+      </mat-card-content>
+
+      <button
+        mat-raised-button
+        color="accent"
+        class="w-1/3 mx-auto rounded-xl bg-gray-600 hover:bg-cyan-500 text-white font-semibold shadow px-6 py-2 flex items-center gap-2 transition-all duration-150 m-2"
+        (click)="onEditClick(deck.id, $event)">
+        
+        Editar
+      </button>
+    </mat-card>
+  </div>
+
+  <!-- Botón de crear nuevo mazo, centrado y destacado -->
+  <div class="flex justify-center my-8 w-full">
+    <button mat-raised-button color="primary"
+      class="rounded-xl bg-cyan-700 hover:bg-cyan-500 text-white font-semibold shadow px-8 py-3 flex items-center gap-2 text-lg transition-all duration-150"
+      (click)="createDeck()">
+      <mat-icon class="mr-2">add</mat-icon>
+      Crear nuevo mazo
+    </button>
+  </div>
+</div>

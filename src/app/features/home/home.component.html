@@ -1,9 +1,30 @@
-<div class="welcome-container">
-    <h1>¡Bienvenido a Duel Deck!</h1>
-    <p>
-      Duel deck
+<div class="min-h-screen flex items-center justify-center"
+     style="background-image: url('/96248597_p0_master1200.jpg'); background-size: cover; background-position: center;">
+  <div class="bg-gray-900 bg-opacity-90 rounded-2xl shadow-2xl px-10 py-12 text-center max-w-xl w-full space-y-8 backdrop-blur">
+    <h1 class="text-4xl md:text-5xl font-extrabold text-cyan-400 drop-shadow mb-4">¡Bienvenido a Duel Deck!</h1>
+    <p class="text-lg text-cyan-200 mb-4">
+      La plataforma para coleccionistas y jugadores de cartas.
     </p>
-    <p>
-      Utiliza el menú superior para navegar por las secciones disponibles. Puedes iniciar sesión, revisar las cartas o expansions.
+    <p class="text-gray-200 mb-2">
+      • Explora todas las cartas y expansiones de Duel Deck.
+      <br>
+      • Crea, edita y organiza tus propios mazos.
+      <br>
+      • Comenta, debate y comparte estrategias con la comunidad.
     </p>
- </div>
+    <p class="text-gray-400 mb-4">
+      ¿Nuevo aquí? Puedes registrarte o iniciar sesión desde el menú superior.<br>
+      Si ya tienes cuenta, accede para empezar a crear tus mazos y descubrir cartas.
+    </p>
+    <div>
+      <a routerLink="/register"
+        class="inline-block bg-cyan-700 hover:bg-cyan-500 text-white font-semibold px-6 py-3 rounded-xl shadow transition-all duration-150 text-base mr-2">
+        Registrarse
+      </a>
+      <a routerLink="/login"
+        class="inline-block bg-gray-700 hover:bg-cyan-400 hover:text-gray-900 text-white font-semibold px-6 py-3 rounded-xl shadow transition-all duration-150 text-base">
+        Iniciar sesión
+      </a>
+    </div>
+  </div>
+</div>

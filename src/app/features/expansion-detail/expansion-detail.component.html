@@ -1,0 +1,22 @@
+<div
+  class="min-h-screen flex items-center justify-center py-8"
+  style="background-image: url('/119182363_p0_master1200.jpg'); background-size: cover; background-position: center;"
+>
+  <div class="w-full max-w-3xl mx-auto p-4">
+    <button
+      [routerLink]="['/expansions']"
+      class="flex items-center gap-1 text-cyan-100 bg-gray-900 bg-opacity-80 backdrop-blur-md hover:text-cyan-400 transition-colors text-sm p-2 rounded mb-4 shadow"
+    >
+      <mat-icon>arrow_back</mat-icon>
+      <span>Volver a expansiones</span>
+    </button>
+
+    <div *ngIf="expansion" class="bg-gray-800 bg-opacity-90 backdrop-blur-md rounded-2xl shadow-md p-6 border border-cyan-700">
+      <img [src]="getImageUrl(expansion)" [alt]="expansion.name" class="w-full h-64 object-cover rounded mb-6 border border-cyan-800 shadow" />
+      <h1 class="text-3xl font-bold mb-2 text-cyan-400">{{ expansion.name }}</h1>
+      <p class="text-sm text-cyan-300 mb-2">Código: {{ expansion.code }}</p>
+      <p class="text-sm text-cyan-200 mb-4">Lanzamiento: {{ expansion.releaseDate | date:'longDate' }}</p>
+      <p class="text-gray-100">{{ expansion.description }}</p>
+    </div>
+  </div>
+</div>

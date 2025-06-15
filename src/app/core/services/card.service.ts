@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
 import { AuthService } from './auth.service';
 import { environment } from '../../../enviroments/enviroment';
+import { Card } from '../../models/card';
 
 
 @Injectable({
@@ -15,28 +16,31 @@ export class CardService {
 
 
  /**
-  * Método para obtener las regiones desde la API.
-  * @returns Observable que emite la lista de cartas.
-  */
- fetchCards(page: number, size: number, sortColumn:string, sortDirection: string ): Observable<any> {
-   const token = this.authService.getToken(); // Obtén el token del AuthService
-
-
-   if (!token) {
-     // Si no hay token, lanza un error indicando que el usuario no está autorizado.
-     return throwError(() => new Error('Unauthorized'));
-   }
-   const params = new HttpParams()
+ * Método para obtener las cartas desde la API.
+ * @returns Observable que emite la lista de cartas.
+ */
+fetchCards(page: number, size: number, sortColumn: string, sortDirection: string): Observable<any> {
+  const params = new HttpParams()
     .set('page', page.toString())
     .set('size', size.toString())
     .set('sort', `${sortColumn},${sortDirection}`);
 
-   // Realiza la solicitud GET al endpoint de regiones con el token en el encabezado.
-   return this.http.get(`${environment.apiUrl}/cards`, {
-     headers: new HttpHeaders({
-       Authorization: `Bearer ${token}`,
-     }),
-     params: params
-   });
- }
+  // La petición se hace sin encabezado Authorization
+  return this.http.get(`${environment.apiUrl}/cards`, { params: params });
+}
+
+ getCardById(cardId: number): Observable<Card> {
+  return this.http.get<Card>(`${environment.apiUrl}/cards/${cardId}`);
+}
+createCard(formData: FormData) {
+  return this.http.post(`${environment.apiUrl}/cards`, formData);
+}
+updateCard(id: number, formData: FormData) {
+  return this.http.put(`${environment.apiUrl}/cards/${id}`, formData);
+}
+deleteCard(id: number) {
+  return this.http.delete(`${environment.apiUrl}/cards/${id}`);
+}
+
+
 }

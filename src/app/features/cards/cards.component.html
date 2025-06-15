@@ -1,71 +1,89 @@
-<div class="w-[90%] max-w-4xl mx-auto mt-8 text-center font-sans">
-  <h2 class="mb-6 text-2xl font-bold text-gray-800">Cartas</h2>
+<div
+  class="min-h-screen flex items-center justify-center"
+  style="background-image: url('/105551758_p0_master1200.jpg'); background-size: cover; background-position: center;"
+>
+  <div class="w-[95%] max-w-5xl mx-auto my-10 p-6 rounded-2xl shadow-2xl border border-cyan-700 bg-transparent text-center font-sans backdrop-blur-md">
 
-  <table mat-table [dataSource]="dataSource" matSort class="w-full mt-6 rounded-lg overflow-hidden shadow-lg bg-gray-50">
-    
-    <!-- ID -->
-    <ng-container matColumnDef="id">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header class="bg-blue-600 text-white px-4 py-3 text-left font-bold">
-        ID
-      </th>
-      <td mat-cell *matCellDef="let card" class="px-4 py-3 text-left text-gray-700">
-        {{ card.id }}
-      </td>
+    <h2 class="mb-8 text-3xl font-extrabold text-cyan-400 drop-shadow tracking-wide">Cartas</h2>
+
+    <ng-container *ngFor="let group of groupedCards">
+      <h3 class="text-left text-2xl font-semibold my-6 text-black-300">{{ group.expansion }}</h3>
+
+      <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6 justify-center">
+        <div
+          *ngFor="let card of group.cards"
+          class="relative w-[148px] h-[216px] rounded-lg shadow-lg overflow-hidden font-serif text-white border border-cyan-700"
+          [ngClass]="{
+            'bg-yellow-900': card.type?.toLowerCase() === 'monster',
+            'bg-cyan-800': card.type?.toLowerCase() === 'spell',
+            'bg-purple-800': card.type?.toLowerCase() === 'trap'
+          }"
+          style="background-image: none;"
+        >
+          <!-- Nombre -->
+          <div class="absolute top-[6px] left-[8px] right-[8px] text-[11px] font-bold truncate text-yellow-200">
+            {{ card.name }}
+          </div>
+
+          <!-- Atributo -->
+          <div class="absolute bottom-[40px] left-[10px] right-[10px] text-[10px] uppercase text-center text-white">
+            {{ card.attribute }}
+          </div>
+
+          <!-- Imagen -->
+          <div class="absolute top-[24px] left-[12px] w-[124px] h-[84px] bg-black border border-cyan-700 overflow-hidden flex items-center justify-center">
+            <img *ngIf="card.image" [src]="getImageUrl(card)" />
+            <span *ngIf="!card.image" class="text-gray-400 text-[8px]">Sin imagen</span>
+          </div>
+
+          <!-- Estrellas (solo monstruos) -->
+          <div
+            *ngIf="card.type?.toLowerCase() === 'monstruo'"
+            class="absolute top-[20px] left-[10px] text-orange-400 text-[10px] font-bold"
+          >
+            <ng-container *ngFor="let star of [].constructor(card.level)">
+              ★
+            </ng-container>
+          </div>
+
+          <!-- Tipo / Subtipo -->
+          <div class="absolute top-[112px] left-[10px] right-[10px] text-[9px] italic">
+            [{{ card.typing }} / {{ card.type }}]
+          </div>
+
+          <!-- Descripción -->
+          <div class="absolute top-[128px] left-[10px] right-[10px] h-[46px] text-[8px] leading-tight overflow-hidden">
+            {{ card.description }}
+          </div>
+
+          <!-- ATK / DEF (solo monstruos) -->
+          <div
+            *ngIf="card.type?.toLowerCase() === 'monstruo'"
+            class="absolute bottom-[20px] left-[10px] text-[9px] text-yellow-100"
+          >
+            ATK/{{ card.attack || '???' }} DEF/{{ card.defense || '???' }}
+          </div>
+
+          <!-- Código y rareza -->
+          <div class="absolute bottom-[5px] left-[10px] right-[10px] text-[7px] text-cyan-200 flex justify-between">
+            <span>{{ card.code }}</span>
+            <span>{{ card.rarity }}</span>
+          </div>
+        </div>
+      </div>
     </ng-container>
 
-    <!-- Nombre -->
-    <ng-container matColumnDef="name">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header class="bg-blue-600 text-white px-4 py-3 text-left font-bold">
-        Nombre
-      </th>
-      <td mat-cell *matCellDef="let card" class="px-4 py-3 text-left text-gray-700">
-        {{ card.name }}
-      </td>
-    </ng-container>
+    <!-- Paginador -->
+    <mat-paginator
+      class="mt-10"
+      [length]="totalElements"
+      [pageSize]="pageSize"
+      [pageSizeOptions]="[5, 10, 20]"
+      (page)="handlePageEvent($event)"
+      showFirstLastButtons
+    ></mat-paginator>
 
-    <ng-container matColumnDef="expansion">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header class="bg-blue-600 text-white px-4 py-3 text-left font-bold">
-        Expansión
-      </th>
-      <td mat-cell *matCellDef="let card" class="px-4 py-3 text-left text-gray-700">
-        {{ card.expansion.name }}
-      </td>
-    </ng-container>
-
-    <ng-container matColumnDef="type">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header class="bg-blue-600 text-white px-4 py-3 text-left font-bold">
-        Tipo
-      </th>
-      <td mat-cell *matCellDef="let card" class="px-4 py-3 text-left text-gray-700">
-        {{ card.type }}
-      </td>
-    </ng-container>
-
-    <!-- Encabezado -->
-    <thead>
-      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    </thead>
-
-    <!-- Filas -->
-    <tbody>
-      <tr
-        mat-row
-        *matRowDef="let row; columns: displayedColumns;"
-        class="hover:bg-gray-200 transition-colors"
-      ></tr>
-    </tbody>
-  </table>
-
-  <!-- Paginador -->
-  <mat-paginator
-    class="mt-6"
-    [length]="totalElements"
-    [pageSize]="pageSize"
-    [pageSizeOptions]="[5, 10, 20]"
-    (page)="handlePageEvent($event)"
-    showFirstLastButtons
-  ></mat-paginator>
-
-  <!-- Error -->
-  <p *ngIf="error" class="mt-6 text-red-600 text-base">{{ error }}</p>
+    <!-- Error -->
+    <p *ngIf="error" class="mt-6 text-red-400 text-base">{{ error }}</p>
+  </div>
 </div>

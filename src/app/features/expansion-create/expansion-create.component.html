@@ -1,0 +1,55 @@
+<div
+  class="min-h-screen flex items-center justify-center py-8"
+  style="background-image: url('/119182363_p0_master1200.jpg'); background-size: cover; background-position: center;"
+>
+  <div class="w-full max-w-xl bg-gray-800 bg-opacity-85 backdrop-blur-md p-8 rounded-2xl shadow-2xl border border-cyan-700">
+    <h2 class="text-2xl font-bold text-center text-cyan-400 mb-6">Crear nueva expansión</h2>
+
+    <form [formGroup]="expansionForm" (ngSubmit)="onSubmit()" class="space-y-5" enctype="multipart/form-data">
+      <mat-form-field class="w-full text-cyan-300">
+        <mat-label>Código</mat-label>
+        <input matInput formControlName="code" maxlength="10" required>
+        <mat-error *ngIf="expansionForm.get('code')?.hasError('required')">Obligatorio</mat-error>
+      </mat-form-field>
+
+      <mat-form-field class="w-full text-cyan-300">
+        <mat-label>Nombre</mat-label>
+        <input matInput formControlName="name" maxlength="100" required>
+        <mat-error *ngIf="expansionForm.get('name')?.hasError('required')">Obligatorio</mat-error>
+      </mat-form-field>
+
+      <mat-form-field class="w-full text-cyan-300">
+        <mat-label>Fecha de lanzamiento</mat-label>
+        <input matInput formControlName="releaseDate" [matDatepicker]="picker" required>
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+      </mat-form-field>
+
+      <mat-form-field class="w-full text-cyan-300">
+        <mat-label>Descripción</mat-label>
+        <textarea matInput formControlName="description" maxlength="1000"></textarea>
+      </mat-form-field>
+
+      <!-- Imagen -->
+      <div>
+        <label class="block mb-2 font-semibold text-cyan-300">Imagen</label>
+        <input type="file" (change)="onImageChange($event)" accept="image/*" class="text-cyan-300 border p-2" />
+        <div *ngIf="imagePreview" class="mt-3">
+          <img [src]="imagePreview" alt="Vista previa" class="h-24 rounded shadow border border-cyan-400 mx-auto" />
+        </div>
+      </div>
+
+      <button
+        mat-raised-button
+        color="primary"
+        class="w-full rounded-xl font-semibold py-2 mt-4 bg-cyan-600 hover:bg-cyan-500 text-white shadow transition-all duration-150"
+        type="submit"
+        [disabled]="expansionForm.invalid || creating">
+        Crear expansión
+      </button>
+
+      <div *ngIf="error" class="text-red-400 text-center mt-4">{{ error }}</div>
+      <div *ngIf="success" class="text-green-400 text-center mt-4">{{ success }}</div>
+    </form>
+  </div>
+</div>

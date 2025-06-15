@@ -1,0 +1,144 @@
+<div
+  class="min-h-screen flex flex-col items-center justify-start bg-gray-900"
+  style="background-image: url('/111290405_p0_master1200.jpg'); background-size: cover; background-position: center;"
+>
+  <!-- MAZO -->
+  <div *ngIf="loading" class="flex justify-center items-center h-64 w-full">
+    <mat-spinner color="accent"></mat-spinner>
+  </div>
+
+  <div *ngIf="!loading && deck" class="max-w-3xl mx-auto my-8 w-full px-2">
+    <mat-card class="rounded-2xl shadow-xl p-6 bg-gray-800 bg-opacity-90 backdrop-blur border border-cyan-700">
+      <div class="flex flex-col md:flex-row items-center gap-6">
+        <img *ngIf="deck.image"
+          [src]="getDeckImageUrl(deck.image)"
+          alt="Imagen del mazo"
+          class="h-48 w-72 object-cover rounded-xl border border-cyan-700 shadow">
+        <div class="flex-1">
+          <h2 class="text-3xl font-bold mb-2 text-cyan-400 tracking-wide">{{ deck.name }}</h2>
+          <div class="text-cyan-300 mb-4">
+            Creado por: <span class="font-semibold">{{ deck.userName || 'Desconocido' }}</span>
+          </div>
+          <p class="text-gray-200">{{ deck.description }}</p>
+        </div>
+      </div>
+    </mat-card>
+  </div>
+
+  <!-- CARTAS DEL MAZO -->
+  <mat-card class="rounded-2xl shadow-xl p-6 mt-8 bg-gray-900 bg-opacity-80 backdrop-blur border border-cyan-800 w-full max-w-3xl mx-auto">
+    <h3 class="text-2xl font-bold mb-4 text-cyan-400 tracking-tight">Cartas en este mazo</h3>
+    <div class="flex flex-wrap gap-4 justify-center">
+      <div
+        *ngFor="let card of detailedCards"
+        class="relative w-[148px] h-[216px] rounded-lg shadow-lg overflow-hidden font-serif text-white border border-cyan-700"
+        [ngClass]="{
+          'bg-yellow-900': card.type.toLowerCase() === 'monster',
+          'bg-cyan-800': card.type.toLowerCase() === 'spell',
+          'bg-purple-800': card.type.toLowerCase() === 'trap'
+        }"
+        style="background-image: none;"
+      >
+        <div class="absolute top-[6px] left-[8px] right-[8px] text-[11px] font-bold truncate text-yellow-200">
+          {{ card.name }}
+        </div>
+        <div class="absolute bottom-[40px] left-[10px] right-[10px] text-[10px] uppercase text-center text-white">
+          {{ card.attribute }}
+        </div>
+        <div class="absolute top-[24px] left-[12px] w-[124px] h-[84px] bg-black border border-cyan-800 overflow-hidden flex items-center justify-center">
+          <img *ngIf="card.image" [src]="getImageUrl(card)" />
+          <span *ngIf="!card.image" class="text-gray-400 text-[8px]">Sin imagen</span>
+        </div>
+        <div
+          *ngIf="card.type?.toLowerCase() === 'monstruo'"
+          class="absolute top-[20px] left-[10px] text-orange-400 text-[10px] font-bold"
+        >
+          <ng-container *ngFor="let star of [].constructor(card.level)">
+            ★
+          </ng-container>
+        </div>
+        <div class="absolute top-[112px] left-[10px] right-[10px] text-[9px] italic">
+          [{{ card.typing }} / {{ card.type }}]
+        </div>
+        <div class="absolute top-[128px] left-[10px] right-[10px] h-[46px] text-[8px] leading-tight overflow-hidden">
+          {{ card.description }}
+        </div>
+        <div
+          *ngIf="card.type?.toLowerCase() === 'monstruo'"
+          class="absolute bottom-[20px] left-[10px] text-[9px] text-yellow-100"
+        >
+          ATK/{{ card.attack || '???' }} DEF/{{ card.defense || '???' }}
+        </div>
+        <div class="absolute bottom-[5px] left-[10px] right-[10px] text-[7px] text-cyan-300 flex justify-between">
+          <span>{{ card.code }}</span>
+          <span>{{ card.rarity }}</span>
+        </div>
+      </div>
+    </div>
+  </mat-card>
+
+  <!-- COMENTARIOS -->
+  <mat-card class="rounded-2xl shadow-xl p-6 mt-8 bg-gray-800 bg-opacity-90 backdrop-blur border border-cyan-700 w-full max-w-3xl mx-auto">
+    <h3 class="text-2xl font-bold mb-6 text-cyan-400 tracking-tight">Comentarios</h3>
+
+    <div *ngIf="commentsLoading" class="flex justify-center items-center py-4">
+      <mat-spinner diameter="32" color="accent"></mat-spinner>
+    </div>
+
+    <div *ngIf="!commentsLoading && comments.length === 0" class="text-cyan-300 py-6 text-center italic">
+      Este mazo aún no tiene comentarios.
+    </div>
+
+    <div *ngIf="!commentsLoading && comments.length > 0" class="space-y-5">
+      <div
+        *ngFor="let comment of comments"
+        class="bg-gray-900 bg-opacity-80 border border-cyan-700 rounded-xl p-4 flex flex-col gap-1"
+      >
+        <div class="flex items-center gap-2">
+          <mat-icon class="text-cyan-400 text-base">person</mat-icon>
+          <span class="font-bold text-sm text-cyan-300">{{ comment.userName }}</span>
+          <button
+            *ngIf="hasRoleAdmin || isCommentAuthor(comment)"
+            mat-icon-button
+            color="warn"
+            class="ml-auto"
+            aria-label="Borrar comentario"
+            (click)="deleteComment(comment.id)"
+            [disabled]="isAddingComment">
+            <mat-icon class="text-red-500">delete</mat-icon>
+          </button>
+        </div>
+        <div class="text-gray-100 text-[15px] pl-6">{{ comment.content }}</div>
+      </div>
+    </div>
+
+    <div *ngIf="isLoggedIn" class="mt-8">
+      <mat-form-field  class="w-full ">
+        <textarea
+          matInput
+          placeholder="Agrega un comentario..."
+          [(ngModel)]="newComment"
+          [disabled]="isAddingComment"
+          rows="2"
+          class="text-white bg-gray-900"
+        ></textarea>
+      </mat-form-field>
+      <div class="flex justify-end mt-2">
+        <button
+          mat-raised-button
+          color="primary"
+          class="rounded-xl bg-cyan-600 hover:bg-cyan-500 text-white font-semibold shadow px-6 py-2 transition-all duration-150"
+          (click)="addComment()"
+          [disabled]="isAddingComment || !newComment.trim()"
+        >
+          <mat-icon class="mr-2">send</mat-icon>
+          Publicar comentario
+        </button>
+      </div>
+    </div>
+
+    <div *ngIf="!isLoggedIn" class="mt-8 text-cyan-300 text-center italic">
+      Inicia sesión para comentar.
+    </div>
+  </mat-card>
+</div>

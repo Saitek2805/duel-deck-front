@@ -1,0 +1,32 @@
+<div
+  class="min-h-screen w-full flex items-center justify-center"
+  style="background-image: url('/119182363_p0_master1200.jpg'); background-size: cover; background-position: center;"
+>
+  <div class="w-full max-w-7xl px-4 py-10">
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+      <div *ngIf="isLoading" class="text-center py-10 text-cyan-200 col-span-full bg-gray-900 bg-opacity-70 backdrop-blur-md rounded-xl shadow">
+        Cargando expansiones...
+      </div>
+
+      <a
+        *ngFor="let expansion of expansions"
+        [routerLink]="['/expansions', expansion.id]"
+        class="bg-gray-800 bg-opacity-80 backdrop-blur-md rounded-2xl shadow-xl overflow-hidden border border-cyan-700 hover:shadow-2xl hover:border-cyan-400 transition-shadow duration-300 block group"
+      >
+        <img
+          [src]="getImageUrl(expansion)"
+          [alt]="expansion.name"
+          class="w-full h-48 object-cover border-b border-cyan-800 group-hover:brightness-110 transition"
+        />
+        <div class="p-4">
+          <h2 class="text-xl font-semibold mb-1 text-cyan-300 group-hover:text-cyan-400 transition">
+            {{ expansion.name }}
+          </h2>
+          <p class="text-sm text-cyan-200 mb-2">Código: {{ expansion.code }}</p>
+          <p class="text-sm text-cyan-100 mb-2">Lanzamiento: {{ expansion.release_date | date: 'mediumDate' }}</p>
+          <p class="text-sm text-gray-200">{{ expansion.description }}</p>
+        </div>
+      </a>
+    </div>
+  </div>
+</div>

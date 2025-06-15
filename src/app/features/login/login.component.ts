@@ -23,7 +23,7 @@ export class LoginComponent {
         this.auth.login(this.username, this.password).subscribe({
             next: (res) => {
                 this.auth.setToken(res.token);
-                this.router.navigate(['/cards']);
+                this.router.navigate(['/']);
             },
             error: (err) => {
                 this.error = 'Usuario y contraseña inválido';

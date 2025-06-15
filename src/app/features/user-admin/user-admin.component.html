@@ -1,0 +1,48 @@
+<div class="min-h-screen flex items-center justify-center bg-gray-900 py-8">
+  <div class="w-full max-w-4xl bg-gray-800 p-8 rounded-2xl shadow-2xl border border-cyan-700">
+    <h2 class="text-2xl font-bold text-center text-cyan-400 mb-6">Administrar usuarios</h2>
+
+    <div *ngIf="loading" class="flex justify-center items-center h-32">
+      <mat-spinner color="accent"></mat-spinner>
+    </div>
+
+    <table *ngIf="!loading" class="min-w-full text-left bg-gray-900 rounded-lg overflow-hidden shadow">
+      <thead>
+        <tr class="bg-cyan-800 text-cyan-100">
+          <th class="py-2 px-4">ID</th>
+          <th class="py-2 px-4">Usuario</th>
+          <th class="py-2 px-4">Nombre</th>
+          <th class="py-2 px-4">Apellidos</th>
+          <th class="py-2 px-4">Estado</th>
+          <th class="py-2 px-4">Acción</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let user of users" class="hover:bg-gray-800 ">
+          <td class="py-2 px-4 text-white">{{ user.id }}</td>
+          <td class="py-2 px-4 text-white">{{ user.username }}</td>
+          <td class="py-2 px-4 text-white">{{ user.firstName }}</td>
+          <td class="py-2 px-4 text-white">{{ user.lastName }}</td>
+          <td class="py-2 px-4 text-white">
+            <span [class.text-green-400]="user.enabled" [class.text-red-400]="!user.enabled">
+              {{ user.enabled ? 'Activo' : 'Desactivado' }}
+            </span>
+          </td>
+          <td class="py-2 px-4">
+            <button
+              mat-raised-button
+              [color]="user.enabled ? 'warn' : 'primary'"
+              class="rounded-xl font-semibold shadow px-4 py-1 transition-all duration-150"
+              (click)="toggleUserEnabled(user)">
+              <mat-icon class="mr-2">{{ user.enabled ? 'block' : 'check_circle' }}</mat-icon>
+              {{ user.enabled ? 'Desactivar' : 'Activar' }}
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div *ngIf="error" class="text-red-400 text-center mt-4">{{ error }}</div>
+    <div *ngIf="success" class="text-green-400 text-center mt-4">{{ success }}</div>
+  </div>
+</div>

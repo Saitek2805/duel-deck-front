@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { BehaviorSubject, catchError, throwError, Observable } from 'rxjs';
+import { BehaviorSubject, catchError, throwError, Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { environment } from '../../../enviroments/enviroment';
 import { tap } from 'rxjs/operators';
@@ -16,7 +16,13 @@ export class AuthService {
  // BehaviorSubject almacena el token y permite a otros componentes reaccionar cuando cambia.
 
 
- constructor(private http: HttpClient, private router: Router) {}
+ constructor(private http: HttpClient, private router: Router) {
+  if (typeof window !== 'undefined') {
+    const savedToken = localStorage.getItem('token');
+    if (savedToken) {
+      this.token.next(savedToken);
+    }
+  }}
 
 
  /**
@@ -64,8 +70,11 @@ getUser(): { username: string; fullName?: string; roles?: string[] } | null {
   * @param token - Token recibido tras una autenticación exitosa.
   */
  setToken(token: string): void {
-   this.token.next(token); // Actualiza el valor del token.
- }
+  this.token.next(token);
+  if (typeof window !== 'undefined') {
+    localStorage.setItem('token', token);
+  }
+}
 
 
  /**
@@ -73,8 +82,11 @@ getUser(): { username: string; fullName?: string; roles?: string[] } | null {
   * @returns El token actual o null si no está definido.
   */
  getToken(): string | null {
-   return this.token.value;
- }
+  if (typeof window !== 'undefined') {
+    return this.token.value || localStorage.getItem('token');
+  }
+  return this.token.value;
+}
  getUsername(): string | null {
   const token = this.getToken();
   if (!token) return null;
@@ -104,8 +116,16 @@ getUser(): { username: string; fullName?: string; roles?: string[] } | null {
   */
  logout(): void {
    this.token.next(null); // Limpia el token almacenado.
+   localStorage.removeItem('token');
    this.router.navigate(['/']); // Redirige al usuario a la ruta raíz.
    
  }
+ getUserIdFromApi(): Observable<number | null> {
+  const username = this.getUsername(); // Usa tu método que lee el 'sub' del JWT
+  if (!username) return of(null);
+  return this.http.get<{ id: number }>(`${environment.apiUrl}/users/username/${username}`)
+    .pipe(map(user => user.id));
+}
+
  
 }

@@ -49,6 +49,7 @@ export class CardsComponent implements OnInit {
 
         ngOnInit() {
             this.fetchCards(this.currentPage, this.pageSize, this.sortColumn, this.sortDirection);
+        
         }
         
         /**
@@ -76,6 +77,8 @@ export class CardsComponent implements OnInit {
                     this.totalPages = res.totalPages;
                     this.currentPage = res.number;
                     this.pageSize = res.size;
+
+                    this.groupCardsByExpansion();
         
                     // Se actualiza el paginador y la vista
                     setTimeout(() => {
@@ -115,4 +118,35 @@ export class CardsComponent implements OnInit {
         
             this.fetchCards(this.currentPage, this.pageSize, this.sortColumn, this.sortDirection);
         }
+
+        groupedCards: { expansion: string; cards: any[] }[] = [];
+
+
+
+groupCardsByExpansion() {
+  const grouped = new Map<string, any[]>();
+  for (const card of this.dataSource.data) {
+    const expansionName = card.expansion?.name || 'Desconocida';
+    if (!grouped.has(expansionName)) {
+      grouped.set(expansionName, []);
+    }
+    grouped.get(expansionName)!.push(card); // el ! evita el warning innecesario aquí
+  }
+
+  this.groupedCards = Array.from(grouped.entries()).map(([expansion, cards]) => ({
+    expansion,
+    cards,
+  }));
+}
+  getImageUrl(card: any): string {
+  if (!card.image) return '';
+  if (card.image.startsWith('http')) return card.image; // ya es URL completa
+
+  // prefijá la URL base del backend
+  return `http://localhost:8080/uploads${card.image.startsWith('/') ? '' : '/'}${card.image}`;
+}
+
+
+
+
 }

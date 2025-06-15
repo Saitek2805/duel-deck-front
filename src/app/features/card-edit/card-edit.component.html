@@ -1,0 +1,134 @@
+<div *ngIf="loading" class="flex justify-center items-center h-64 bg-gray-900">
+  <mat-spinner color="accent"></mat-spinner>
+</div>
+
+<div *ngIf="!loading" class="min-h-screen flex items-center justify-center  py-8" style="background-image: url('/103057200_p0_master1200.jpg'); background-size: cover; background-position: center;">
+  <div class="w-full max-w-xl  p-8 rounded-2xl shadow-2xl border border-cyan-700 backdrop-blur">
+    <h2 class="text-2xl font-bold text-center text-cyan-400 mb-6">Editar carta</h2>
+    <!-- Selector para elegir carta -->
+        <mat-form-field class="w-full mb-6 text-cyan-300">
+        <mat-label>Seleccionar carta</mat-label>
+        <mat-select [(ngModel)]="selectedCardId" name="selectedCardId" (selectionChange)="onCardSelect($event.value)">
+            <mat-option *ngFor="let card of allCards" [value]="card.id">
+            {{ card.name }}
+            </mat-option>
+        </mat-select>
+        </mat-form-field>
+
+    <form [formGroup]="cardForm" (ngSubmit)="onSubmit()" class="space-y-5" enctype="multipart/form-data">
+      <mat-form-field class="w-full text-cyan-300">
+        <mat-label>Código</mat-label>
+        <input matInput formControlName="code" maxlength="10" required>
+        <mat-error *ngIf="cardForm.get('code')?.hasError('required')">Obligatorio</mat-error>
+      </mat-form-field>
+
+      <mat-form-field class="w-full text-cyan-300">
+        <mat-label>Nombre</mat-label>
+        <input matInput formControlName="name" maxlength="100" required>
+        <mat-error *ngIf="cardForm.get('name')?.hasError('required')">Obligatorio</mat-error>
+      </mat-form-field>
+
+      <!-- Selector de tipo -->
+      <mat-form-field class="w-full text-cyan-300">
+        <mat-label>Tipo</mat-label>
+        <mat-select formControlName="type" required>
+          <mat-option *ngFor="let t of types" [value]="t.name">{{ t.name }}</mat-option>
+        </mat-select>
+        <mat-error *ngIf="cardForm.get('type')?.hasError('required')">Selecciona un tipo</mat-error>
+      </mat-form-field>
+
+      <!-- Selector de subtipo -->
+      <mat-form-field class="w-full text-cyan-300">
+        <mat-label>Subtipo</mat-label>
+        <mat-select formControlName="typing" required>
+          <mat-option *ngFor="let sub of typings" [value]="sub.name">{{ sub.name }}</mat-option>
+        </mat-select>
+        <mat-error *ngIf="cardForm.get('typing')?.hasError('required')">Selecciona un subtipo</mat-error>
+      </mat-form-field>
+
+      <!-- Selector de atributo -->
+      <mat-form-field class="w-full text-cyan-300">
+        <mat-label>Atributo</mat-label>
+        <mat-select formControlName="attribute" required>
+          <mat-option *ngFor="let a of attributes" [value]="a.name">{{ a.name }}</mat-option>
+        </mat-select>
+        <mat-error *ngIf="cardForm.get('attribute')?.hasError('required')">Selecciona un atributo</mat-error>
+      </mat-form-field>
+
+      <div class="flex gap-4">
+        <mat-form-field class="flex-1 text-cyan-300">
+          <mat-label>Nivel</mat-label>
+          <input matInput type="number" formControlName="level" min="0">
+        </mat-form-field>
+        <mat-form-field class="flex-1 text-cyan-300">
+          <mat-label>Ataque</mat-label>
+          <input matInput type="number" formControlName="attack" min="0">
+        </mat-form-field>
+        <mat-form-field class="flex-1 text-cyan-300">
+          <mat-label>Defensa</mat-label>
+          <input matInput type="number" formControlName="defense" min="0">
+        </mat-form-field>
+      </div>
+
+      <!-- Selector de rareza -->
+      <mat-form-field class="w-full text-cyan-300">
+        <mat-label>Rareza</mat-label>
+        <mat-select formControlName="rarity" required>
+          <mat-option *ngFor="let r of rarities" [value]="r.name">{{ r.name }}</mat-option>
+        </mat-select>
+        <mat-error *ngIf="cardForm.get('rarity')?.hasError('required')">Selecciona una rareza</mat-error>
+      </mat-form-field>
+
+      <!-- Imagen -->
+      <div>
+        <label class="block mb-2 font-semibold text-cyan-300">Imagen</label>
+        <input type="file" (change)="onImageChange($event)" accept="image/*" class="text-cyan-300 border p-2" />
+        <div *ngIf="imagePreview || cardForm.get('image')?.value" class="mt-3">
+          <img [src]="imagePreview ? imagePreview : getCardImageUrl(cardForm.get('image')?.value)" 
+               alt="Carta lista para ser subida" class="h-24 rounded shadow border border-cyan-400 mx-auto" />
+        </div>
+      </div>
+
+      <mat-form-field class="w-full text-cyan-300">
+        <mat-label>Descripción</mat-label>
+        <textarea matInput formControlName="description" maxlength="255"></textarea>
+      </mat-form-field>
+
+      <!-- Selector de expansión -->
+      <mat-form-field class="w-full text-cyan-300">
+        <mat-label>Expansión</mat-label>
+        <mat-select formControlName="expansion" required>
+          <mat-option *ngFor="let exp of expansions" [value]="exp.id">
+            {{ exp.name }}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="cardForm.get('expansion')?.hasError('required')">Selecciona una expansión</mat-error>
+      </mat-form-field>
+
+      <button
+        mat-raised-button
+        color="primary"
+        class="w-full rounded-xl font-semibold py-2 mt-4 bg-cyan-600 hover:bg-cyan-500 text-white shadow transition-all duration-150"
+        type="submit"
+        [disabled]="cardForm.invalid || saving">
+        Guardar cambios
+      </button>
+
+      <div *ngIf="error" class="text-red-400 text-center mt-4">{{ error }}</div>
+      <div *ngIf="success" class="text-green-400 text-center mt-4">{{ success }}</div>
+    </form>
+    <!-- ... tu formulario aquí ... -->
+
+    <div class="flex justify-center my-8">
+    <button
+        mat-raised-button
+        color="warn"
+        class="rounded-xl font-semibold bg-red-700 hover:bg-red-500 text-white shadow px-8 py-3 flex items-center gap-2 text-lg transition-all duration-150"
+        (click)="onDeleteCard()">
+        <mat-icon class="mr-2">delete_forever</mat-icon>
+        Borrar carta
+    </button>
+    </div>
+
+  </div>
+</div>
