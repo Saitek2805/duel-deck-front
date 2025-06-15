@@ -1,4 +1,4 @@
-
+import { environment } from '../../../enviroments/enviroment';
 import { Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 import { Deck, DeckService } from '../../core/services/deck.service';
@@ -45,10 +45,15 @@ onEditClick(deckId: number, event: Event) {
   }
 
   getDeckImageUrl(imagePath: string): string {
-  // Si imagePath ya viene con el host y todo, solo retorna imagePath
-  // Si viene solo el nombre, concatena la URL base del backend
-  return imagePath.startsWith('http')
-    ? imagePath
-    : `http://localhost:8080/uploads/${imagePath}`;
+  if (!imagePath) return '';
+  if (imagePath.startsWith('http')) return imagePath;
+
+  // Usa la url base del backend desde el environment, quitando el /api si existe
+  const baseUrl = environment.apiUrl.endsWith('/api')
+    ? environment.apiUrl.slice(0, -4)
+    : environment.apiUrl;
+
+  return `${baseUrl}/uploads/${imagePath}`;
 }
+
 }

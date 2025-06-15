@@ -4,6 +4,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
+import { environment } from '../../../enviroments/enviroment';
 
 
 @Component({
@@ -35,12 +36,16 @@ export class DecksListComponent implements OnInit {
     });
   }
 
-  getDeckImageUrl(imagePath: string): string {
-  // Si imagePath ya viene con el host y todo, solo retorna imagePath
-  // Si viene solo el nombre, concatena la URL base del backend
-  return imagePath.startsWith('http')
-    ? imagePath
-    : `http://localhost:8080/uploads/${imagePath}`;
-}
+  getDeckImageUrl(imagePath?: string): string {
+    if (!imagePath) return 'assets/placeholder.jpg'; // Imagen por defecto
+    if (imagePath.startsWith('http')) return imagePath;
+  
+    // Quita /api si existe en apiUrl
+    const baseUrl = environment.apiUrl.endsWith('/api')
+      ? environment.apiUrl.slice(0, -4)
+      : environment.apiUrl;
+  
+    return `${baseUrl}/uploads/${imagePath}`;
+  }
 
 }

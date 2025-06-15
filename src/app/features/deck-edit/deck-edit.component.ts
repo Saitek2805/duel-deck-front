@@ -19,6 +19,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { environment } from '../../../enviroments/enviroment';
 
 
 
@@ -93,13 +94,17 @@ export class DeckEditComponent implements OnInit {
 
   
 
-  getDeckImageUrl(imagePath: string): string {
-  // Si imagePath ya viene con el host y todo, solo retorna imagePath
-  // Si viene solo el nombre, concatena la URL base del backend
-  return imagePath.startsWith('http')
-    ? imagePath
-    : `http://localhost:8080/uploads/${imagePath}`;
-}
+  getDeckImageUrl(imagePath?: string): string {
+    if (!imagePath) return 'assets/placeholder.jpg'; // Imagen por defecto
+    if (imagePath.startsWith('http')) return imagePath;
+  
+    // Quita /api si existe en apiUrl
+    const baseUrl = environment.apiUrl.endsWith('/api')
+      ? environment.apiUrl.slice(0, -4)
+      : environment.apiUrl;
+  
+    return `${baseUrl}/uploads/${imagePath}`;
+  }
 onImageChange(event: any) {
   const file: File = event.target.files[0];
   if (file) {

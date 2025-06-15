@@ -8,7 +8,7 @@ import { MatSort, Sort } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
-
+import { environment } from '../../../enviroments/enviroment';
 
 
 @Component({
@@ -139,11 +139,16 @@ groupCardsByExpansion() {
   }));
 }
   getImageUrl(card: any): string {
-  if (!card.image) return '';
-  if (card.image.startsWith('http')) return card.image; // ya es URL completa
+  if (!card?.image) return '';
+  if (card.image.startsWith('http')) return card.image;
 
-  // prefijá la URL base del backend
-  return `http://localhost:8080/uploads${card.image.startsWith('/') ? '' : '/'}${card.image}`;
+  // Saca el /api del final si está presente
+  const baseUrl = environment.apiUrl.endsWith('/api')
+    ? environment.apiUrl.slice(0, -4)
+    : environment.apiUrl;
+
+  // Se asegura de no duplicar / ni omitirlo
+  return `${baseUrl}/uploads${card.image.startsWith('/') ? '' : '/'}${card.image}`;
 }
 
 

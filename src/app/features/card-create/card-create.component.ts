@@ -8,7 +8,7 @@ import { CardTypingService } from '../../core/services/card-typing.service';
 import { CardRarityService } from '../../core/services/card-rarity.service';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
-
+import { environment } from '../../../enviroments/enviroment';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';

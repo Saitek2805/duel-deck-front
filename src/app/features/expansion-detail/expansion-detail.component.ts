@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ExpansionService } from '../../core/services/expansion.service';
 import { RouterLink } from '@angular/router';
 import { MatIcon } from '@angular/material/icon';
+import { environment } from '../../../enviroments/enviroment';
 
 @Component({
   selector: 'app-expansion-detail',
@@ -43,11 +44,14 @@ export class ExpansionDetailComponent implements OnInit {
     }
   });
 }
-
-
   getImageUrl(expansion: any): string {
-    if (!expansion.image) return '';
-    if (expansion.image.startsWith('http')) return expansion.image;
-    return `http://localhost:8080/uploads/${expansion.image}`;
-  }
+  if (!expansion?.image) return '';
+  if (expansion.image.startsWith('http')) return expansion.image;
+
+  const baseUrl = environment.apiUrl.endsWith('/api')
+    ? environment.apiUrl.slice(0, -4)
+    : environment.apiUrl;
+
+  return `${baseUrl}/uploads/${expansion.image}`;
+}
 }

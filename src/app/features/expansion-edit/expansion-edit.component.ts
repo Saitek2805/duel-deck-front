@@ -12,6 +12,7 @@ import { CommonModule } from '@angular/common';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatOptionModule } from '@angular/material/core';
 import { MatSelectModule, MatSelectChange } from '@angular/material/select';
+import { environment } from '../../../enviroments/enviroment';
 
 @Component({
   selector: 'app-expansion-edit',
@@ -148,9 +149,9 @@ export class ExpansionEditComponent implements OnInit {
   }
 
   getExpansionImageUrl(imagePath: string): string {
-    if (!imagePath) return '';
-    return imagePath.startsWith('http')
-      ? imagePath
-      : `http://localhost:8080/uploads/${imagePath}`;
-  }
+  if (!imagePath) return '';
+  return imagePath.startsWith('http')
+    ? imagePath
+    : `${environment.apiUrl.endsWith('/api') ? environment.apiUrl.slice(0, -4) : environment.apiUrl}/uploads/${imagePath}`;
+}
 }

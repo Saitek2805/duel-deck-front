@@ -8,7 +8,7 @@ import { CardTypingService } from '../../core/services/card-typing.service';
 import { CardRarityService } from '../../core/services/card-rarity.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
-// Angular Material imports:
+import { environment } from '../../../enviroments/enviroment';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
@@ -176,11 +176,16 @@ export class CardEditComponent implements OnInit {
   }
 
   getCardImageUrl(imagePath: string): string {
-    if (!imagePath) return '';
-    return imagePath.startsWith('http')
-      ? imagePath
-      : `http://localhost:8080/uploads/${imagePath}`;
-  }
+  if (!imagePath) return '';
+  // Si ya es una URL absoluta, la retorna tal cual
+  if (imagePath.startsWith('http')) return imagePath;
+  // Si apiUrl termina en /api, quitamos ese /api para tener la base del dominio
+  const baseUrl = environment.apiUrl.endsWith('/api')
+    ? environment.apiUrl.slice(0, -4)
+    : environment.apiUrl;
+  // Armamos la ruta completa
+  return `${baseUrl}/uploads/${imagePath}`;
+}
   onCardSelect(cardId: number) {
   if (!cardId) return;
   this.router.navigate(['/cards', cardId, 'edit']);

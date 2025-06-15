@@ -17,7 +17,7 @@ import { MatFormField } from '@angular/material/form-field';
 import { FormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatIcon } from '@angular/material/icon';
-
+import { environment } from '../../../enviroments/enviroment';
 
 @Component({
   selector: 'app-decks-detail',
@@ -101,23 +101,33 @@ export class DecksDetailsComponent implements OnInit {
 }
 
 getDeckImageUrl(imagePath?: string): string {
-  if (!imagePath) return 'assets/placeholder.jpg'; // O cualquier imagen por defecto que quieras
-  return imagePath.startsWith('http')
-    ? imagePath
-    : `http://localhost:8080/uploads/${imagePath}`;
+  if (!imagePath) return 'assets/placeholder.jpg'; // Imagen por defecto
+  if (imagePath.startsWith('http')) return imagePath;
+
+  // Quita /api si existe en apiUrl
+  const baseUrl = environment.apiUrl.endsWith('/api')
+    ? environment.apiUrl.slice(0, -4)
+    : environment.apiUrl;
+
+  return `${baseUrl}/uploads/${imagePath}`;
 }
+
   
   repeatByQuantity(card: any): any[] {
   // Retorna un array del tamaño de la cantidad, para *ngFor
   return Array(card.quantity).fill(card);
 }
   getImageUrl(card: any): string {
-  if (!card.image) return '';
-  if (card.image.startsWith('http')) return card.image; // ya es URL completa
+  if (!card?.image) return '';
+  if (card.image.startsWith('http')) return card.image;
 
-  // prefijá la URL base del backend
-  return `http://localhost:8080/uploads${card.image.startsWith('/') ? '' : '/'}${card.image}`;
+  const baseUrl = environment.apiUrl.endsWith('/api')
+    ? environment.apiUrl.slice(0, -4)
+    : environment.apiUrl;
+
+  return `${baseUrl}/uploads${card.image.startsWith('/') ? '' : '/'}${card.image}`;
 }
+
 
   loadComments() {
   this.commentsLoading = true;

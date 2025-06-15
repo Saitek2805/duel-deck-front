@@ -4,6 +4,7 @@ import { ExpansionService } from '../../core/services/expansion.service';
 import { Router } from '@angular/router';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { RouterModule } from '@angular/router';
+import { environment } from '../../../enviroments/enviroment';
 
 @Component({
   selector: 'app-expansions',
@@ -54,10 +55,16 @@ export class ExpansionsComponent implements OnInit {
   }
 
   getImageUrl(expansion: any): string {
-  if (!expansion.image) return '';
+  if (!expansion?.image) return '';
   if (expansion.image.startsWith('http')) return expansion.image;
 
-  return `http://localhost:8080/uploads${expansion.image.startsWith('/') ? '' : '/'}${expansion.image}`;
+  // Obtener la base del backend sin el "/api" al final si lo tiene
+  const baseUrl = environment.apiUrl.endsWith('/api')
+    ? environment.apiUrl.slice(0, -4)
+    : environment.apiUrl;
+
+  // Evita dobles barras
+  return `${baseUrl}/uploads${expansion.image.startsWith('/') ? '' : '/'}${expansion.image}`;
 }
 
 
